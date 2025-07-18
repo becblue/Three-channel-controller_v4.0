@@ -28,7 +28,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "system_config.h"
+#include "relay_control.h"
+#include "temperature_control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
