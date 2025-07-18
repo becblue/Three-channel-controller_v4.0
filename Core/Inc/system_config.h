@@ -47,7 +47,14 @@ typedef enum
     STATE_CH1_ON,         // 通道1开启
     STATE_CH2_ON,         // 通道2开启
     STATE_CH3_ON,         // 通道3开启
-    STATE_ERROR           // 系统错误
+    STATE_ERROR,          // 系统错误
+    
+    // 添加system_monitor模块需要的枚举值
+    SYSTEM_ALL_OFF = STATE_STANDBY,     // 全部关断状态
+    SYSTEM_CHANNEL1_ON = STATE_CH1_ON,  // 通道1打开状态
+    SYSTEM_CHANNEL2_ON = STATE_CH2_ON,  // 通道2打开状态
+    SYSTEM_CHANNEL3_ON = STATE_CH3_ON,  // 通道3打开状态
+    SYSTEM_ERROR = STATE_ERROR          // 错误状态
 } SystemState_t;
 
 /* 通道定义 -------------------------------------------------------------------*/
@@ -56,14 +63,23 @@ typedef enum
     CHANNEL_OFF = 0,      // 关闭
     CHANNEL_1,            // 通道1
     CHANNEL_2,            // 通道2
-    CHANNEL_3             // 通道3
+    CHANNEL_3,            // 通道3
+    CHANNEL_ON            // 通道开启状态
 } Channel_t;
 
 /* 通道状态定义 ---------------------------------------------------------------*/
 typedef enum
 {
-    CHANNEL_ON = 1,       // 通道开启
-    CHANNEL_OFF_STATE = 0 // 通道关闭
+    CHANNEL_OFF_STATE = 0,   // 通道关闭状态
+    CHANNEL_ON_STATE         // 通道开启状态
+} ChannelState_t;
+
+/* 通道类型定义 ---------------------------------------------------------------*/
+typedef enum
+{
+    CHANNEL_TYPE_1 = 0,   // 通道类型1
+    CHANNEL_TYPE_2,       // 通道类型2
+    CHANNEL_TYPE_3        // 通道类型3
 } ChannelType_t;
 
 /* 温度传感器定义 -------------------------------------------------------------*/
@@ -86,6 +102,7 @@ typedef enum
 /* 配置参数 -------------------------------------------------------------------*/
 #define TEMP_NORMAL         35.0f     // 正常温度阈值
 #define TEMP_HIGH           60.0f     // 高温阈值
+#define TEMP_ALARM_THRESHOLD 60.0f    // 报警温度阈值（与TEMP_HIGH保持一致）
 #define TEMP_HYSTERESIS     2.0f      // 温度回差
 
 #define FAN_PWM_NORMAL      50        // 正常风扇占空比

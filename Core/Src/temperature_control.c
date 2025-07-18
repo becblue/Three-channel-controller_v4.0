@@ -314,6 +314,25 @@ void TemperatureControl_Process(void)
 
 
 
+
+
+/**
+ * @brief 温度控制任务处理
+ * @details 在主循环中调用，处理温度控制相关任务
+ */
+void TemperatureControl_Task(void)
+{
+    // 执行温度控制主处理
+    TemperatureControl_Process();
+    
+    // 检查温度异常
+    AlarmType_t temp_alarm = TemperatureControl_CheckTemperatureAlarm();
+    if (temp_alarm != ALARM_NONE)
+    {
+        AlarmManager_SetAlarm(temp_alarm);
+    }
+}
+
 /**
  * @brief 获取风扇占空比
  * @return uint8_t 占空比(0-100)
@@ -326,79 +345,7 @@ uint8_t TemperatureControl_GetFanDuty(void)
     return (uint8_t)((ccr_value * 100) / arr_value);
 }
 
-/**
- * @brief 获取风扇转速
- * @return uint16_t 转速(RPM)
- */
-uint16_t TemperatureControl_GetFanRPM(void)
-{
-    // 调用已有的转速获取函数
-    return TemperatureControl_GetFanRpm();
-}
-
-/**
- * @brief 更新所有温度数据和风扇控制
- */
-void TemperatureControl_UpdateAll(void)
-{
-    // 获取所有温度传感器数据
-    float temp1 = TemperatureControl_GetTemperature(0);
-    float temp2 = TemperatureControl_GetTemperature(1);
-    float temp3 = TemperatureControl_GetTemperature(2);
-    
-    // 计算最高温度
-    float max_temp = temp1;
-    if (temp2 > max_temp) max_temp = temp2;
-    if (temp3 > max_temp) max_temp = temp3;
-
-    // 根据最高温度更新风扇控制
-    TemperatureControl_UpdateFanByTemperature(max_temp);
-
-    // 更新风扇转速
-    TemperatureControl_GetFanRpm();
-}
-
-/**
- * @brief 温度控制任务处理
- * @details 在主循环中调用，处理温度监测和风扇控制任务
- */
-void TemperatureControl_Task(void)
-{
-    // 更新所有温度传感器数据和风扇控制
-    TemperatureControl_UpdateAll();
-    
-    // 检测温度异常（≥60℃）
-    float temp1 = TemperatureControl_GetTemperature(0);  // NTC_1
-    float temp2 = TemperatureControl_GetTemperature(1);  // NTC_2
-    float temp3 = TemperatureControl_GetTemperature(2);  // NTC_3
-    
-    if (temp1 >= 60.0f)
-    {
-        AlarmManager_SetAlarm(ALARM_K);
-    }
-    else
-    {
-        AlarmManager_ClearAlarm(ALARM_K);
-    }
-    
-    if (temp2 >= 60.0f)
-    {
-        AlarmManager_SetAlarm(ALARM_L);
-    }
-    else
-    {
-        AlarmManager_ClearAlarm(ALARM_L);
-    }
-    
-    if (temp3 >= 60.0f)
-    {
-        AlarmManager_SetAlarm(ALARM_M);
-    }
-    else
-    {
-        AlarmManager_ClearAlarm(ALARM_M);
-    }
-} 
+ 
 
  
 

@@ -55,7 +55,7 @@ typedef enum {
     SELFCHECK_FLASH,                     // Flash存储器测试
     SELFCHECK_I2C,                       // I2C总线测试
     SELFCHECK_GPIO,                      // GPIO状态测试
-    SELFCHECK_COMPLETE                   // 自检完成
+    SELFCHECK_ITEM_COMPLETE              // 自检项目完成
 } SelfCheckItem_t;
 
 /* 自检状态枚举 */
@@ -222,6 +222,8 @@ void OLEDDisplay_ShowAlarmInterface(void);
  * @param status 自检状态
  */
 void OLEDDisplay_UpdateSelfCheckStatus(SelfCheckItem_t item, SelfCheckStatus_t status);
+
+
 
 #endif /* __OLED_DISPLAY_H */ 
 

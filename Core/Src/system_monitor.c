@@ -21,7 +21,13 @@
 /* 内部状态变量 ---------------------------------------------------------------*/
 static SelfCheckState_t selfcheck_state = SELFCHECK_IDLE;      // 自检状态
 static SelfCheckResult_t selfcheck_result = {0};               // 自检结果
-static SystemStatus_t system_status = {0};                     // 系统状态
+static SystemStatus_t system_status = {
+    .expected_state = STATE_STARTUP,
+    .current_state = STATE_STARTUP,
+    .power_status = 0,
+    .correction_count = 0,
+    .monitor_state = MONITOR_NORMAL
+};                                                              // 系统状态
 static uint8_t correction_retry_count = 0;                     // 纠错重试次数
 static uint32_t last_monitor_time = 0;                         // 上次监控时间
 
@@ -74,8 +80,10 @@ void SystemMonitor_Init(void)
  */
 SelfCheckState_t SystemMonitor_RunSelfCheck(void)
 {
-    static uint32_t step_start_time = 0;
+    static uint32_t step_start_time = 0;    // 步骤开始时间
     uint32_t current_time = HAL_GetTick();
+    
+    (void)step_start_time; // 标记变量为已使用，避免编译警告
     
     switch (selfcheck_state)
     {
@@ -373,7 +381,7 @@ uint8_t SystemMonitor_CorrectContactorStates(void)
             if (HAL_GPIO_ReadPin(SW1_STA_GPIO_Port, SW1_STA_Pin) != GPIO_PIN_SET)
             {
                 // 尝试重新激活通道1
-                RelayControl_OpenChannel(CHANNEL_1);
+                RelayControl_TurnOnChannel1();
             }
             break;
             
@@ -382,7 +390,7 @@ uint8_t SystemMonitor_CorrectContactorStates(void)
             if (HAL_GPIO_ReadPin(SW2_STA_GPIO_Port, SW2_STA_Pin) != GPIO_PIN_SET)
             {
                 // 尝试重新激活通道2
-                RelayControl_OpenChannel(CHANNEL_2);
+                RelayControl_TurnOnChannel2();
             }
             break;
             
@@ -391,7 +399,7 @@ uint8_t SystemMonitor_CorrectContactorStates(void)
             if (HAL_GPIO_ReadPin(SW3_STA_GPIO_Port, SW3_STA_Pin) != GPIO_PIN_SET)
             {
                 // 尝试重新激活通道3
-                RelayControl_OpenChannel(CHANNEL_3);
+                RelayControl_TurnOnChannel3();
             }
             break;
             
@@ -400,15 +408,15 @@ uint8_t SystemMonitor_CorrectContactorStates(void)
             // 所有接触器都应该关闭，如果有开启的则关闭对应通道
             if (HAL_GPIO_ReadPin(SW1_STA_GPIO_Port, SW1_STA_Pin) == GPIO_PIN_SET)
             {
-                RelayControl_CloseChannel(CHANNEL_1);
+                RelayControl_TurnOffChannel1();
             }
             if (HAL_GPIO_ReadPin(SW2_STA_GPIO_Port, SW2_STA_Pin) == GPIO_PIN_SET)
             {
-                RelayControl_CloseChannel(CHANNEL_2);
+                RelayControl_TurnOffChannel2();
             }
             if (HAL_GPIO_ReadPin(SW3_STA_GPIO_Port, SW3_STA_Pin) == GPIO_PIN_SET)
             {
-                RelayControl_CloseChannel(CHANNEL_3);
+                RelayControl_TurnOffChannel3();
             }
             break;
     }
@@ -645,7 +653,9 @@ static uint8_t CheckTemperatureSafety(void)
     float temp1, temp2, temp3;
     
     // 获取三路温度
-    TemperatureControl_GetTemperatures(&temp1, &temp2, &temp3);
+    temp1 = TemperatureControl_GetTemperature(0);  // NTC_1
+    temp2 = TemperatureControl_GetTemperature(1);  // NTC_2
+    temp3 = TemperatureControl_GetTemperature(2);  // NTC_3
     
     // 检查是否超过60℃
     if (temp1 >= TEMP_ALARM_THRESHOLD)
@@ -682,12 +692,40 @@ static uint8_t CorrectSingleRelay(uint8_t channel, uint8_t target_state)
     if (target_state)
     {
         // 开启通道
-        return RelayControl_OpenChannel(ch);
+        switch (ch)
+        {
+            case CHANNEL_1:
+                RelayControl_TurnOnChannel1();
+                break;
+            case CHANNEL_2:
+                RelayControl_TurnOnChannel2();
+                break;
+            case CHANNEL_3:
+                RelayControl_TurnOnChannel3();
+                break;
+            default:
+                return 0;
+        }
+        return 1;
     }
     else
     {
         // 关闭通道
-        return RelayControl_CloseChannel(ch);
+        switch (ch)
+        {
+            case CHANNEL_1:
+                RelayControl_TurnOffChannel1();
+                break;
+            case CHANNEL_2:
+                RelayControl_TurnOffChannel2();
+                break;
+            case CHANNEL_3:
+                RelayControl_TurnOffChannel3();
+                break;
+            default:
+                return 0;
+        }
+        return 1;
     }
 }
 

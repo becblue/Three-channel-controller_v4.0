@@ -402,21 +402,21 @@ uint8_t RelayControl_GetContactorStatus(Channel_t channel)
 /**
  * @brief 获取通道状态
  * @param channel 通道编号
- * @retval ChannelType_t 通道状态（CHANNEL_ON/CHANNEL_OFF_STATE）
+ * @retval ChannelState_t 通道状态（CHANNEL_ON_STATE/CHANNEL_OFF_STATE）
  */
-ChannelType_t RelayControl_GetChannelState(Channel_t channel)
+ChannelState_t RelayControl_GetChannelState(Channel_t channel)
 {
     // 简单实现：基于使能信号状态判断
     switch (channel)
     {
         case CHANNEL_1:
-            return RelayControl_ReadK1_EN() ? CHANNEL_ON : CHANNEL_OFF_STATE;
+            return RelayControl_ReadK1_EN() ? CHANNEL_ON_STATE : CHANNEL_OFF_STATE;
             
         case CHANNEL_2:
-            return RelayControl_ReadK2_EN() ? CHANNEL_ON : CHANNEL_OFF_STATE;
+            return RelayControl_ReadK2_EN() ? CHANNEL_ON_STATE : CHANNEL_OFF_STATE;
             
         case CHANNEL_3:
-            return RelayControl_ReadK3_EN() ? CHANNEL_ON : CHANNEL_OFF_STATE;
+            return RelayControl_ReadK3_EN() ? CHANNEL_ON_STATE : CHANNEL_OFF_STATE;
             
         default:
             return CHANNEL_OFF_STATE;
@@ -446,5 +446,7 @@ void RelayControl_Task(void)
         }
     }
 }
+
+
 
  

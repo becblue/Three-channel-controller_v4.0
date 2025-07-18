@@ -32,6 +32,7 @@ float TemperatureControl_GetTemperature(uint8_t ntc_channel);  // »ñÈ¡Ö¸¶¨NTCÎÂ¶
 
 // ·çÉÈ¿ØÖÆ
 void TemperatureControl_SetFanDuty(uint8_t duty_percent);      // ÉèÖÃPWMÕ¼¿Õ±È
+uint8_t TemperatureControl_GetFanDuty(void);                   // »ñÈ¡PWMÕ¼¿Õ±È
 uint16_t TemperatureControl_GetFanRpm(void);                   // »ñÈ¡·çÉÈ×ªËÙ
 
 // ÎÂ¶È¼à¿Ø
@@ -41,16 +42,6 @@ AlarmType_t TemperatureControl_CheckTemperatureAlarm(void);    // ¼ì²éÎÂ¶ÈÒì³£
 #ifdef __cplusplus
 }
 #endif
-
-// ÎÂ¶È»ñÈ¡º¯Êı
-float TemperatureControl_GetTemperature(uint8_t ntc_channel);  // »ñÈ¡Ö¸¶¨NTCÎÂ¶È£¨0-2£©
-
-// ·çÉÈ¿ØÖÆº¯Êı
-uint8_t TemperatureControl_GetFanDuty(void);            // »ñÈ¡·çÉÈÕ¼¿Õ±È
-uint16_t TemperatureControl_GetFanRPM(void);            // »ñÈ¡·çÉÈ×ªËÙ
-
-// ¸üĞÂº¯Êı
-void TemperatureControl_UpdateAll(void);                // ¸üĞÂËùÓĞÎÂ¶ÈÊı¾İºÍ·çÉÈ¿ØÖÆ
 
 // ÈÎÎñ´¦Àíº¯Êı
 void TemperatureControl_Task(void);                     // ÎÂ¶È¿ØÖÆÈÎÎñ´¦Àí

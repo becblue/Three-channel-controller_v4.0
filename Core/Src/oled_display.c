@@ -498,7 +498,7 @@ void OLEDDisplay_ForceRefresh(void)
  */
 void OLEDDisplay_UpdateSelfCheckStatus(SelfCheckItem_t item, SelfCheckStatus_t status)
 {
-    if (item < SELFCHECK_COMPLETE)
+    if (item < SELFCHECK_ITEM_COMPLETE)
     {
         g_oled_display.selfcheck_status[item] = status;
         g_oled_display.refresh_flag = 1;
@@ -527,7 +527,7 @@ void OLEDDisplay_Task(void)
             
         case OLED_INTERFACE_SELFCHECK:
             // 自检完成后切换到正常界面
-            if (g_oled_display.selfcheck_item >= SELFCHECK_COMPLETE)
+            if (g_oled_display.selfcheck_item >= SELFCHECK_ITEM_COMPLETE)
             {
                 OLEDDisplay_SetInterface(OLED_INTERFACE_NORMAL);
             }
@@ -684,7 +684,7 @@ void OLEDDisplay_ShowSelfCheck(void)
     OLED_DrawLine(0, 56, 127, 56, OLED_COLOR_NORMAL);
     
     // 显示状态信息
-    if (g_oled_display.selfcheck_item < SELFCHECK_COMPLETE)
+    if (g_oled_display.selfcheck_item < SELFCHECK_ITEM_COMPLETE)
     {
         OLED_ShowString(0, 58, "Self-Test Running...", 8, OLED_COLOR_NORMAL);
     }
@@ -708,17 +708,17 @@ void OLEDDisplay_ShowNormalInterface(void)
     OLED_DrawLine(0, 12, 127, 12, OLED_COLOR_NORMAL);
     
     // 通道状态显示
-    ChannelType_t ch1_state = RelayControl_GetChannelState(CHANNEL_1);
-    ChannelType_t ch2_state = RelayControl_GetChannelState(CHANNEL_2);
-    ChannelType_t ch3_state = RelayControl_GetChannelState(CHANNEL_3);
+    ChannelState_t ch1_state = RelayControl_GetChannelState(CHANNEL_1);
+    ChannelState_t ch2_state = RelayControl_GetChannelState(CHANNEL_2);
+    ChannelState_t ch3_state = RelayControl_GetChannelState(CHANNEL_3);
     
-    sprintf(buffer, "CH1: [%s]", (ch1_state == CHANNEL_ON) ? "ON " : "OFF");
+    sprintf(buffer, "CH1: [%s]", (ch1_state == CHANNEL_ON_STATE) ? "ON " : "OFF");
     OLED_ShowString(0, 16, buffer, 8, OLED_COLOR_NORMAL);
     
-    sprintf(buffer, "CH2: [%s]", (ch2_state == CHANNEL_ON) ? "ON " : "OFF");
+    sprintf(buffer, "CH2: [%s]", (ch2_state == CHANNEL_ON_STATE) ? "ON " : "OFF");
     OLED_ShowString(0, 26, buffer, 8, OLED_COLOR_NORMAL);
     
-    sprintf(buffer, "CH3: [%s]", (ch3_state == CHANNEL_ON) ? "ON " : "OFF");
+    sprintf(buffer, "CH3: [%s]", (ch3_state == CHANNEL_ON_STATE) ? "ON " : "OFF");
     OLED_ShowString(0, 36, buffer, 8, OLED_COLOR_NORMAL);
     
     // 绘制分隔线
@@ -729,7 +729,7 @@ void OLEDDisplay_ShowNormalInterface(void)
     float temp2 = TemperatureControl_GetTemperature(1);  // NTC_2
     float temp3 = TemperatureControl_GetTemperature(2);  // NTC_3
     uint8_t duty = TemperatureControl_GetFanDuty();
-    uint16_t rpm = TemperatureControl_GetFanRPM();
+    uint16_t rpm = TemperatureControl_GetFanRpm();
     
     sprintf(buffer, "T1:%d", (int)temp1);
     OLED_ShowString(0, 52, buffer, 8, OLED_COLOR_NORMAL);
@@ -812,7 +812,7 @@ void OLEDDisplay_ShowAlarmInterface(void)
     float temp2 = TemperatureControl_GetTemperature(1);  // NTC_2
     float temp3 = TemperatureControl_GetTemperature(2);  // NTC_3
     uint8_t duty = TemperatureControl_GetFanDuty();
-    uint16_t rpm = TemperatureControl_GetFanRPM();
+    uint16_t rpm = TemperatureControl_GetFanRpm();
     
     sprintf(buffer, "T1:%d", (int)temp1);
     OLED_ShowString(0, 52, buffer, 8, OLED_COLOR_NORMAL);
@@ -829,5 +829,7 @@ void OLEDDisplay_ShowAlarmInterface(void)
     sprintf(buffer, "Duty: %d%%  FAN:%dRPM", duty, rpm);
     OLED_ShowString(0, 58, buffer, 8, OLED_COLOR_NORMAL);
 } 
+
+ 
 
 
