@@ -31,6 +31,7 @@
 #include "system_config.h"
 #include "relay_control.h"
 #include "temperature_control.h"
+#include "alarm_manager.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

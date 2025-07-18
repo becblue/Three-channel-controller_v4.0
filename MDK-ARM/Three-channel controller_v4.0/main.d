@@ -42,3 +42,4 @@ three-channel controller_v4.0\main.o: ../Core/Inc/gpio.h
 three-channel controller_v4.0\main.o: ../Core/Inc/system_config.h
 three-channel controller_v4.0\main.o: ../Core/Inc/relay_control.h
 three-channel controller_v4.0\main.o: ../Core/Inc/temperature_control.h
+three-channel controller_v4.0\main.o: ../Core/Inc/alarm_manager.h

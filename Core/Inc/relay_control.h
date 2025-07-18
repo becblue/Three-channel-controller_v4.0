@@ -49,6 +49,10 @@ uint8_t RelayControl_ReadSW1_STA(void);   // 读取SW1_STA状态
 uint8_t RelayControl_ReadSW2_STA(void);   // 读取SW2_STA状态
 uint8_t RelayControl_ReadSW3_STA(void);   // 读取SW3_STA状态
 
+// 状态获取封装函数
+uint8_t RelayControl_GetRelayStatus(Channel_t channel, uint8_t relay_num);  // 获取继电器状态（1或2）
+uint8_t RelayControl_GetContactorStatus(Channel_t channel);                 // 获取接触器状态
+
 // 基础异常检测
 AlarmType_t RelayControl_CheckEnableConflict(void);     // 检测A类异常（使能冲突）
 AlarmType_t RelayControl_CheckRelayStatus(Channel_t ch); // 检测继电器状态异常

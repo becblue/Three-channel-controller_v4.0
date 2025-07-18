@@ -349,5 +349,52 @@ AlarmType_t RelayControl_CheckRelayStatus(Channel_t ch)
     }
     
     return ALARM_NONE;
-} 
+}
+
+/**
+  * @brief  获取继电器状态（封装函数）
+  * @param  channel: 通道号
+  * @param  relay_num: 继电器编号（1或2）
+  * @retval 继电器状态（1=高电平，0=低电平）
+  */
+uint8_t RelayControl_GetRelayStatus(Channel_t channel, uint8_t relay_num)
+{
+    switch (channel)
+    {
+        case CHANNEL_1:
+            return (relay_num == 1) ? RelayControl_ReadK1_1_STA() : RelayControl_ReadK1_2_STA();
+            
+        case CHANNEL_2:
+            return (relay_num == 1) ? RelayControl_ReadK2_1_STA() : RelayControl_ReadK2_2_STA();
+            
+        case CHANNEL_3:
+            return (relay_num == 1) ? RelayControl_ReadK3_1_STA() : RelayControl_ReadK3_2_STA();
+            
+        default:
+            return 0;
+    }
+}
+
+/**
+  * @brief  获取接触器状态（封装函数）
+  * @param  channel: 通道号
+  * @retval 接触器状态（1=高电平，0=低电平）
+  */
+uint8_t RelayControl_GetContactorStatus(Channel_t channel)
+{
+    switch (channel)
+    {
+        case CHANNEL_1:
+            return RelayControl_ReadSW1_STA();
+            
+        case CHANNEL_2:
+            return RelayControl_ReadSW2_STA();
+            
+        case CHANNEL_3:
+            return RelayControl_ReadSW3_STA();
+            
+        default:
+            return 0;
+    }
+}
 
