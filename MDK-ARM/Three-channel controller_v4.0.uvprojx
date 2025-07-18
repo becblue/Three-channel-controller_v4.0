@@ -463,6 +463,26 @@
               <FileType>1</FileType>
               <FilePath>..\Core\Src\alarm_manager.c</FilePath>
             </File>
+            <File>
+              <FileName>oled_display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\oled_display.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled_fonts.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\oled_fonts.c</FilePath>
+            </File>
+            <File>
+              <FileName>buhler_logo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\buhler_logo.c</FilePath>
+            </File>
+            <File>
+              <FileName>minyer_logo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\minyer_logo.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -34,3 +34,4 @@ three-channel controller_v4.0\relay_control.o: ../Drivers/STM32F1xx_HAL_Driver/I
 three-channel controller_v4.0\relay_control.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 three-channel controller_v4.0\relay_control.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 three-channel controller_v4.0\relay_control.o: ../Core/Inc/system_config.h
+three-channel controller_v4.0\relay_control.o: ../Core/Inc/alarm_manager.h

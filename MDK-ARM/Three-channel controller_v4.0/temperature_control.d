@@ -36,3 +36,4 @@ three-channel controller_v4.0\temperature_control.o: ../Drivers/STM32F1xx_HAL_Dr
 three-channel controller_v4.0\temperature_control.o: ../Core/Inc/system_config.h
 three-channel controller_v4.0\temperature_control.o: ../Core/Inc/adc.h
 three-channel controller_v4.0\temperature_control.o: ../Core/Inc/tim.h
+three-channel controller_v4.0\temperature_control.o: ../Core/Inc/alarm_manager.h

@@ -42,5 +42,19 @@ AlarmType_t TemperatureControl_CheckTemperatureAlarm(void);    // 检查温度异常
 }
 #endif
 
+// 温度获取函数
+float TemperatureControl_GetTemperature(uint8_t ntc_channel);  // 获取指定NTC温度（0-2）
+
+// 风扇控制函数
+uint8_t TemperatureControl_GetFanDuty(void);            // 获取风扇占空比
+uint16_t TemperatureControl_GetFanRPM(void);            // 获取风扇转速
+
+// 更新函数
+void TemperatureControl_UpdateAll(void);                // 更新所有温度数据和风扇控制
+
+// 任务处理函数
+void TemperatureControl_Task(void);                     // 温度控制任务处理
+
 #endif /* __TEMPERATURE_CONTROL_H */ 
 
+ 

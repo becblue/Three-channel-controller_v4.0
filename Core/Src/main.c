@@ -32,6 +32,7 @@
 #include "relay_control.h"
 #include "temperature_control.h"
 #include "alarm_manager.h"
+#include "oled_display.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -103,7 +104,11 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  // 初始化各个功能模块
+  RelayControl_Init();           // 继电器控制模块初始化
+  TemperatureControl_Init();     // 温度控制模块初始化
+  AlarmManager_Init();           // 报警管理模块初始化
+  OLEDDisplay_Init();            // OLED显示模块初始化
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -113,6 +118,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    // 主循环任务处理
+    RelayControl_Task();           // 继电器控制任务
+    TemperatureControl_Task();     // 温度控制任务  
+    AlarmManager_Task();           // 报警管理任务
+    OLEDDisplay_Task();            // OLED显示任务
+    
+    // 短暂延时，避免CPU占用过高
+    HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }

@@ -378,5 +378,141 @@ void AlarmManager_Process(void)
             }
         }
     }
-} 
+}
 
+/**
+ * @brief 获取当前活跃报警数量
+ * @return uint8_t 活跃报警数量
+ */
+uint8_t AlarmManager_GetAlarmCount(void)
+{
+    uint8_t count = 0;
+    for (AlarmType_t alarm = ALARM_A; alarm <= ALARM_O; alarm++)
+    {
+        if (AlarmManager_IsAlarmActive(alarm))
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+/**
+ * @brief 获取活跃报警列表
+ * @param alarms 报警数组
+ * @param max_count 最大数量
+ * @return uint8_t 实际获取的报警数量
+ */
+uint8_t AlarmManager_GetActiveAlarms(AlarmType_t *alarms, uint8_t max_count)
+{
+    uint8_t count = 0;
+    for (AlarmType_t alarm = ALARM_A; alarm <= ALARM_O && count < max_count; alarm++)
+    {
+        if (AlarmManager_IsAlarmActive(alarm))
+        {
+            alarms[count] = alarm;
+            count++;
+        }
+    }
+    return count;
+}
+
+/**
+ * @brief 更新报警输出状态
+ */
+void AlarmManager_UpdateAlarmOutput(void)
+{
+    // 如果有任何报警，拉低PB4（低电平有效）
+    if (AlarmManager_GetAlarmCount() > 0)
+    {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET); // 报警输出：低电平
+    }
+    else
+    {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);   // 正常状态：高电平
+    }
+}
+
+/**
+ * @brief 更新蜂鸣器状态
+ */
+void AlarmManager_UpdateBeeper(void)
+{
+    static uint32_t last_beep_time = 0;
+    static uint8_t beep_state = 0;
+    uint32_t current_time = HAL_GetTick();
+    
+    // 检查报警优先级和模式
+    uint8_t alarm_count = AlarmManager_GetAlarmCount();
+    if (alarm_count == 0)
+    {
+        // 无报警，关闭蜂鸣器
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
+        return;
+    }
+    
+    // 获取最高优先级报警类型
+    AlarmType_t active_alarms[5];
+    AlarmManager_GetActiveAlarms(active_alarms, 5);
+    AlarmType_t highest_alarm = active_alarms[0];
+    
+    uint32_t beep_interval;
+    if (highest_alarm == ALARM_A || highest_alarm == ALARM_N)
+    {
+        beep_interval = 1000; // A、N类：1秒间隔
+    }
+    else if (highest_alarm >= ALARM_B && highest_alarm <= ALARM_J)
+    {
+        beep_interval = 50;   // B~J类：50ms间隔
+    }
+    else // K~M类
+    {
+        // K~M类：连续低电平
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
+        return;
+    }
+    
+    // 实现周期性脉冲
+    if (current_time - last_beep_time >= beep_interval)
+    {
+        beep_state = !beep_state;
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, beep_state ? GPIO_PIN_SET : GPIO_PIN_RESET);
+        last_beep_time = current_time;
+    }
+}
+
+/**
+ * @brief 自动清除报警
+ */
+void AlarmManager_AutoClearAlarms(void)
+{
+    // 基本实现：检查所有报警的清除条件
+    for (AlarmType_t alarm = ALARM_A; alarm <= ALARM_O; alarm++)
+    {
+        if (AlarmManager_IsAlarmActive(alarm))
+        {
+            if (AlarmManager_CheckAlarmClearCondition(alarm))
+            {
+                AlarmManager_ClearAlarm(alarm);
+            }
+        }
+    }
+}
+
+/**
+ * @brief 报警管理任务处理
+ * @details 在主循环中调用，处理报警状态更新和输出控制
+ */
+void AlarmManager_Task(void)
+{
+    // 更新报警输出状态
+    AlarmManager_UpdateAlarmOutput();
+    
+    // 更新蜂鸣器输出状态
+    AlarmManager_UpdateBeeper();
+    
+    // 检查并自动清除满足条件的报警
+    AlarmManager_AutoClearAlarms();
+}
+
+ 

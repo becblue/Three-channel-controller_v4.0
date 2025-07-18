@@ -59,6 +59,22 @@ typedef enum
     CHANNEL_3             // 通道3
 } Channel_t;
 
+/* 通道状态定义 ---------------------------------------------------------------*/
+typedef enum
+{
+    CHANNEL_ON = 1,       // 通道开启
+    CHANNEL_OFF_STATE = 0 // 通道关闭
+} ChannelType_t;
+
+/* 温度传感器定义 -------------------------------------------------------------*/
+typedef enum
+{
+    TEMP_SENSOR_1 = 0,    // 温度传感器1
+    TEMP_SENSOR_2,        // 温度传感器2
+    TEMP_SENSOR_3,        // 温度传感器3
+    TEMP_SENSOR_COUNT     // 传感器总数
+} TempSensor_t;
+
 /* 风扇模式定义 ---------------------------------------------------------------*/
 typedef enum
 {
@@ -78,6 +94,10 @@ typedef enum
 #define RELAY_PULSE_TIME    500       // 继电器脉冲时间ms
 #define LOGO_DISPLAY_TIME   2000      // LOGO显示时间ms
 
+/* 报警相关常量 ---------------------------------------------------------------*/
+#define ALARM_COUNT         15        // 报警类型总数(A-O)
+#define MAX_ALARM_COUNT     10        // 最大同时活跃报警数量
+
 /* 全局变量 -------------------------------------------------------------------*/
 extern volatile AlarmType_t g_alarm;         // 当前异常
 extern volatile SystemState_t g_state;       // 当前状态
@@ -91,5 +111,5 @@ void SystemConfig_Init(void);                // 初始化
 }
 #endif
 
-#endif /* __SYSTEM_CONFIG_H */ 
+#endif /* __SYSTEM_CONFIG_H */
 

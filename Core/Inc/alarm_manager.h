@@ -54,5 +54,18 @@ uint8_t AlarmManager_CheckAlarmClearCondition(AlarmType_t alarm_type);  // ¼ì²é±
 }
 #endif
 
+// ±¨¾¯×´Ì¬²éÑ¯º¯Êı
+uint8_t AlarmManager_GetAlarmCount(void);               // »ñÈ¡µ±Ç°»îÔ¾±¨¾¯ÊıÁ¿
+uint8_t AlarmManager_GetActiveAlarms(AlarmType_t *alarms, uint8_t max_count); // »ñÈ¡»îÔ¾±¨¾¯ÁĞ±í
+
+// ÄÚ²¿¸üĞÂº¯Êı
+void AlarmManager_UpdateAlarmOutput(void);              // ¸üĞÂ±¨¾¯Êä³ö×´Ì¬
+void AlarmManager_UpdateBeeper(void);                   // ¸üĞÂ·äÃùÆ÷×´Ì¬
+void AlarmManager_AutoClearAlarms(void);                // ×Ô¶¯Çå³ı±¨¾¯
+
+// ÈÎÎñ´¦Àíº¯Êı
+void AlarmManager_Task(void);                           // ±¨¾¯¹ÜÀíÈÎÎñ´¦Àí
+
 #endif /* __ALARM_MANAGER_H */ 
 
+ 

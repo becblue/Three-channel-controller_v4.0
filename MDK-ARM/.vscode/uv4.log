@@ -1,0 +1,32 @@
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Program Files\Keil_v5\ARM\ARMCC\Bin'
+Build target 'Three-channel controller_v4.0'
+compiling oled_display.c...
+..\Core\Src\oled_display.c(407): error:  #247: function "OLED_Pow"  has already been defined
+  static uint32_t OLED_Pow(uint8_t m, uint8_t n)
+..\Core\Src\oled_display.c: 0 warnings, 1 error
+compiling temperature_control.c...
+..\Core\Src\temperature_control.c(376): warning:  #223-D: function "AlarmManager_SetAlarm" declared implicitly
+          AlarmManager_SetAlarm(ALARM_K);
+..\Core\Src\temperature_control.c(380): warning:  #223-D: function "AlarmManager_ClearAlarm" declared implicitly
+          AlarmManager_ClearAlarm(ALARM_K);
+..\Core\Src\temperature_control.c(385): warning:  #223-D: function "AlarmManager_SetAlarm" declared implicitly
+          AlarmManager_SetAlarm(ALARM_L);
+..\Core\Src\temperature_control.c(389): warning:  #223-D: function "AlarmManager_ClearAlarm" declared implicitly
+          AlarmManager_ClearAlarm(ALARM_L);
+..\Core\Src\temperature_control.c(394): warning:  #223-D: function "AlarmManager_SetAlarm" declared implicitly
+          AlarmManager_SetAlarm(ALARM_M);
+..\Core\Src\temperature_control.c(398): warning:  #223-D: function "AlarmManager_ClearAlarm" declared implicitly
+          AlarmManager_ClearAlarm(ALARM_M);
+..\Core\Src\temperature_control.c: 6 warnings, 0 errors
+compiling system_config.c...
+compiling main.c...
+compiling relay_control.c...
+..\Core\Src\relay_control.c(435): warning:  #223-D: function "AlarmManager_SetAlarm" declared implicitly
+          AlarmManager_SetAlarm(conflict_alarm);
+..\Core\Src\relay_control.c(444): warning:  #223-D: function "AlarmManager_SetAlarm" declared implicitly
+              AlarmManager_SetAlarm(status_alarm);
+..\Core\Src\relay_control.c: 2 warnings, 0 errors
+compiling alarm_manager.c...
+"Three-channel controller_v4.0\Three-channel controller_v4.0" - 1 Error(s), 8 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:03

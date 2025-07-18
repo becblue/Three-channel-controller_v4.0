@@ -8,6 +8,7 @@
 /* USER CODE END Header */
 
 #include "system_config.h"
+#include "alarm_manager.h"
 
 /* 全局变量定义 ---------------------------------------------------------------*/
 volatile AlarmType_t g_alarm = ALARM_NONE;        // 当前异常
@@ -28,3 +29,4 @@ void SystemConfig_Init(void)
     g_channel = CHANNEL_OFF;
 } 
 
+ 

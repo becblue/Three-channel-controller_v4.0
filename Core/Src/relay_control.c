@@ -8,6 +8,7 @@
 /* USER CODE END Header */
 
 #include "relay_control.h"
+#include "alarm_manager.h"
 
 /**
   * @brief  继电器控制初始化
@@ -393,8 +394,57 @@ uint8_t RelayControl_GetContactorStatus(Channel_t channel)
         case CHANNEL_3:
             return RelayControl_ReadSW3_STA();
             
-        default:
+                default:
             return 0;
     }
 }
 
+/**
+ * @brief 获取通道状态
+ * @param channel 通道编号
+ * @retval ChannelType_t 通道状态（CHANNEL_ON/CHANNEL_OFF_STATE）
+ */
+ChannelType_t RelayControl_GetChannelState(Channel_t channel)
+{
+    // 简单实现：基于使能信号状态判断
+    switch (channel)
+    {
+        case CHANNEL_1:
+            return RelayControl_ReadK1_EN() ? CHANNEL_ON : CHANNEL_OFF_STATE;
+            
+        case CHANNEL_2:
+            return RelayControl_ReadK2_EN() ? CHANNEL_ON : CHANNEL_OFF_STATE;
+            
+        case CHANNEL_3:
+            return RelayControl_ReadK3_EN() ? CHANNEL_ON : CHANNEL_OFF_STATE;
+            
+        default:
+            return CHANNEL_OFF_STATE;
+    }
+}
+
+/**
+ * @brief 继电器控制任务处理
+ * @details 在主循环中调用，处理继电器控制相关任务
+ */
+void RelayControl_Task(void)
+{
+    // 定期检测使能冲突
+    AlarmType_t conflict_alarm = RelayControl_CheckEnableConflict();
+    if (conflict_alarm != ALARM_NONE)
+    {
+        AlarmManager_SetAlarm(conflict_alarm);
+    }
+    
+    // 检测各通道继电器状态异常
+    for (Channel_t ch = CHANNEL_1; ch <= CHANNEL_3; ch++)
+    {
+        AlarmType_t status_alarm = RelayControl_CheckRelayStatus(ch);
+        if (status_alarm != ALARM_NONE)
+        {
+            AlarmManager_SetAlarm(status_alarm);
+        }
+    }
+}
+
+ 
