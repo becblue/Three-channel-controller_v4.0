@@ -1,7 +1,7 @@
 Dependencies for Project 'Three-channel controller_v4.0', Target 'Three-channel controller_v4.0': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
 F (startup_stm32f103xe.s)(0x687A009D)(--cpu Cortex-M3 -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_Three-channel_controller_v4.0-I"D:\Program Files\Keil_v5\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include"-I"D:\Program Files\Keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include"--pd "__UVISION_VERSION SETA 536" --pd "_RTE_ SETA 1" --pd "STM32F10X_HD SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f103xe.lst --xref -o "three-channel controller_v4.0\startup_stm32f103xe.o" --depend "three-channel controller_v4.0\startup_stm32f103xe.d")
-F (../Core/Src/main.c)(0x687A4B97)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_Three-channel_controller_v4.0-I"D:\Program Files\Keil_v5\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include"-I"D:\Program Files\Keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include"-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o "three-channel controller_v4.0\main.o" --omf_browse "three-channel controller_v4.0\main.crf" --depend "three-channel controller_v4.0\main.d")
+F (../Core/Src/main.c)(0x687A76B0)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_Three-channel_controller_v4.0-I"D:\Program Files\Keil_v5\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include"-I"D:\Program Files\Keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include"-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o "three-channel controller_v4.0\main.o" --omf_browse "three-channel controller_v4.0\main.crf" --depend "three-channel controller_v4.0\main.d")
 I (../Core/Inc/main.h)(0x6879FCF2)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x67715408)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x6879FCF2)
@@ -46,6 +46,8 @@ I (../Core/Inc/relay_control.h)(0x687A7411)
 I (../Core/Inc/temperature_control.h)(0x687A6EA7)
 I (../Core/Inc/alarm_manager.h)(0x687A60A5)
 I (../Core/Inc/oled_display.h)(0x687A6D94)
+I (../Core/Inc/system_monitor.h)(0x687A6493)
+I (../Core/Inc/app_main.h)(0x687A70A3)
 F (../Core/Src/gpio.c)(0x687A0099)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_Three-channel_controller_v4.0-I"D:\Program Files\Keil_v5\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include"-I"D:\Program Files\Keil_v5\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include"-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o "three-channel controller_v4.0\gpio.o" --omf_browse "three-channel controller_v4.0\gpio.crf" --depend "three-channel controller_v4.0\gpio.d")
 I (../Core/Inc/gpio.h)(0x6879FCF1)
 I (../Core/Inc/main.h)(0x6879FCF2)

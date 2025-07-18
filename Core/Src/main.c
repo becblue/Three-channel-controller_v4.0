@@ -33,6 +33,8 @@
 #include "temperature_control.h"
 #include "alarm_manager.h"
 #include "oled_display.h"
+#include "system_monitor.h"        // 新增：系统监控模块
+#include "app_main.h"              // 新增：主控制模块
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,13 +55,23 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+// 系统运行状态标志
+static uint8_t system_initialized = 0;     // 系统初始化完成标志
+static uint32_t main_loop_counter = 0;     // 主循环计数器（用于调试）
+static uint32_t last_error_time = 0;       // 上次错误发生时间
 
+// 系统性能监控
+static uint32_t loop_start_time = 0;       // 循环开始时间
+static uint32_t max_loop_time = 0;         // 最大循环时间
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+static void System_InitializeAllModules(void);   // 系统模块初始化
+static void System_RunMainLoop(void);            // 主循环处理
+static void System_ErrorHandler(void);           // 系统错误处理
+static void System_PerformanceMonitor(void);     // 性能监控
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -104,11 +116,14 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  // 初始化各个功能模块
-  RelayControl_Init();           // 继电器控制模块初始化
-  TemperatureControl_Init();     // 温度控制模块初始化
-  AlarmManager_Init();           // 报警管理模块初始化
-  OLEDDisplay_Init();            // OLED显示模块初始化
+  // 系统完整初始化
+  System_InitializeAllModules();
+
+  // 设置系统初始化完成标志
+  system_initialized = 1;
+
+  // 启动主控制模块
+  AppMain_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -118,14 +133,17 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    // 主循环任务处理
-    RelayControl_Task();           // 继电器控制任务
-    TemperatureControl_Task();     // 温度控制任务  
-    AlarmManager_Task();           // 报警管理任务
-    OLEDDisplay_Task();            // OLED显示任务
+    // 记录循环开始时间（性能监控）
+    loop_start_time = HAL_GetTick();
     
-    // 短暂延时，避免CPU占用过高
-    HAL_Delay(10);
+    // 执行主循环处理
+    System_RunMainLoop();
+    
+    // 性能监控
+    System_PerformanceMonitor();
+    
+    // 主循环计数
+    main_loop_counter++;
   }
   /* USER CODE END 3 */
 }
@@ -178,6 +196,103 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+/**
+ * @brief 系统模块初始化
+ * @param None
+ * @retval None
+ */
+static void System_InitializeAllModules(void)
+{
+    // 按照依赖关系顺序初始化各模块
+    RelayControl_Init();           // 继电器控制模块
+    TemperatureControl_Init();     // 温度控制模块
+    AlarmManager_Init();           // 报警管理模块
+    SystemMonitor_Init();          // 系统监控模块
+    OLEDDisplay_Init();            // OLED显示模块
+    
+    // 短暂延时确保所有模块稳定
+    HAL_Delay(100);
+}
+
+/**
+ * @brief 主循环处理
+ * @param None
+ * @retval None
+ */
+static void System_RunMainLoop(void)
+{
+    // 检查系统初始化状态
+    if (!system_initialized)
+    {
+        System_ErrorHandler();
+        return;
+    }
+    
+    // 主控制模块运行（包含状态机）
+    AppMain_Run();
+    
+    // 各功能模块任务处理（按优先级排序）
+    SystemMonitor_Task();          // 最高优先级：系统监控
+    AlarmManager_Task();           // 高优先级：报警处理
+    RelayControl_Task();           // 中优先级：继电器控制
+    TemperatureControl_Task();     // 中优先级：温度控制
+    OLEDDisplay_Task();            // 低优先级：显示更新
+}
+
+/**
+ * @brief 系统错误处理
+ * @param None
+ * @retval None
+ */
+static void System_ErrorHandler(void)
+{
+    // 记录错误时间
+    last_error_time = HAL_GetTick();
+    
+    // 标记变量已使用，避免编译警告
+    (void)last_error_time;
+    
+    // 激活系统错误报警
+    AlarmManager_SetAlarm(ALARM_N);  // N类异常：自检异常
+    
+    // 紧急安全处理：关闭所有通道
+    RelayControl_TurnOffChannel1();
+    RelayControl_TurnOffChannel2();
+    RelayControl_TurnOffChannel3();
+    
+    // 激活报警输出
+    HAL_GPIO_WritePin(ALARM_GPIO_Port, ALARM_Pin, GPIO_PIN_RESET);
+    
+    // 显示错误状态
+    OLEDDisplay_ShowAlarmInterface();
+}
+
+/**
+ * @brief 性能监控
+ * @param None
+ * @retval None
+ */
+static void System_PerformanceMonitor(void)
+{
+    // 计算循环执行时间
+    uint32_t loop_time = HAL_GetTick() - loop_start_time;
+    
+    // 记录最大循环时间
+    if (loop_time > max_loop_time)
+    {
+        max_loop_time = loop_time;
+    }
+    
+    // 如果循环时间过长，进行警告
+    if (loop_time > MAIN_LOOP_DELAY_MS * 5) // 超过50ms
+    {
+        // 可以在这里添加性能警告处理
+    }
+    
+    // 控制主循环频率
+    HAL_Delay(MAIN_LOOP_DELAY_MS);
+}
+
 /* USER CODE END 4 */
 
 /**
@@ -187,11 +302,21 @@ void SystemClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+  
+  // 系统级错误处理
+  System_ErrorHandler();
+  
+  // 禁用所有中断
   __disable_irq();
+  
+  // 死循环等待看门狗复位或外部复位
   while (1)
   {
+    // 保持报警状态
+    HAL_GPIO_WritePin(ALARM_GPIO_Port, ALARM_Pin, GPIO_PIN_RESET);
+    HAL_Delay(100);
   }
+  
   /* USER CODE END Error_Handler_Debug */
 }
 

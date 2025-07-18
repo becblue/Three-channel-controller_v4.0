@@ -44,3 +44,5 @@ three-channel controller_v4.0\main.o: ../Core/Inc/relay_control.h
 three-channel controller_v4.0\main.o: ../Core/Inc/temperature_control.h
 three-channel controller_v4.0\main.o: ../Core/Inc/alarm_manager.h
 three-channel controller_v4.0\main.o: ../Core/Inc/oled_display.h
+three-channel controller_v4.0\main.o: ../Core/Inc/system_monitor.h
+three-channel controller_v4.0\main.o: ../Core/Inc/app_main.h
